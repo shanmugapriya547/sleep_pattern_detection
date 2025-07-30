@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
 import mysql.connector
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -10,12 +11,12 @@ CORS(app)
 model = joblib.load('sleep_model.pkl')
 label_map = {0: 'Poor', 1: 'Average', 2: 'Good'}
 
-# ✅ Connect to MySQL Database
+# ✅ Connect to MySQL Database using environment variables
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",        # change if your MySQL user is different
-    password="1692005", # put your MySQL password here
-    database="sleepdb"
+    host=os.environ.get("DB_HOST", "localhost"),
+    user=os.environ.get("DB_USER", "root"),
+    password=os.environ.get("DB_PASSWORD", "1692005"),
+    database=os.environ.get("DB_NAME", "sleepdb")
 )
 cursor = db.cursor()
 
