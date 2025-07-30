@@ -11,5 +11,6 @@ flask-cors
 gunicorn
 joblib
 mysql-connector-python
+scikit-learn
 
 
