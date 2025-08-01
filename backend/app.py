@@ -4,6 +4,8 @@ import joblib
 import mysql.connector
 import os
 
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -13,11 +15,14 @@ label_map = {0: 'Poor', 1: 'Average', 2: 'Good'}
 
 # ✅ Connect to MySQL Database using environment variables
 db = mysql.connector.connect(
-    host=os.environ.get("DB_HOST", "localhost"),
-    user=os.environ.get("DB_USER", "root"),
-    password=os.environ.get("DB_PASSWORD", "1692005"),
-    database=os.environ.get("DB_NAME", "sleepdb")
+    host="localhost",
+    user="root",
+    password="1692005",
+    database="sleepdb",
+    port=3306
 )
+
+
 cursor = db.cursor()
 
 @app.route('/predict', methods=['POST'])
@@ -77,8 +82,8 @@ def predict():
             time_in_bed = wake_time - bed_time
 
         sleep_efficiency = round((sleep_hours / time_in_bed) * 100, 2) if time_in_bed > 0 else 0
-        analysis_text = f"You slept for {sleep_hours} hours out of {time_in_bed} hours in bed."
-
+        analysis_text = f"You slept for {sleep_hours} hours with a sleep efficiency of {sleep_efficiency:.1f}%."
+        
         # ✅ Save results in MySQL database
         cursor.execute("""
             INSERT INTO sleep_data 
@@ -97,12 +102,15 @@ def predict():
             'suggestions': suggestion_text,
             'sleep_efficiency': f"{sleep_efficiency}%",
             'total_sleep_hours': f"{sleep_hours} hrs",
-            'analysis': analysis_text
+            'analysis':analysis_text
         })
+            
+
 
     except Exception as e:
         print("❌ Backend error:", str(e))
         return jsonify({'prediction': 'Error occurred while predicting.'}), 500
+        
   
 
 if __name__ == '__main__':

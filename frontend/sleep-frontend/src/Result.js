@@ -17,6 +17,7 @@ const Result = () => {
     <p><strong>📊 Sleep Efficiency:</strong> {result.sleep_efficiency}</p>
     <p><strong>🕐 Total Sleep Hours:</strong> {result.total_sleep_hours}</p>
     <p><strong>🔍 Analysis:</strong> {result.analysis}</p>
+
     <p><strong>⚠️ Reasons:</strong> {result.reasons}</p>
     <p><strong>💡 Suggestions:</strong> {result.suggestions}</p>
   </div>
